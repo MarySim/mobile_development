@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -24,9 +22,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,6 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.artspaceapp.ui.theme.ArtSpaceAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -44,39 +41,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             ArtSpaceAppTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    ArtSpaceScreen()
+                    val viewModel: ArtSpaceViewModel = viewModel()
+                    val state by viewModel.uiState.collectAsStateWithLifecycle()
+                    ArtSpaceScreen(state, viewModel::previous, viewModel::next)
                 }
             }
         }
     }
 }
 
-private const val ARTWORK_COUNT = 3
-
-private data class Artwork(
-    @param:DrawableRes val image: Int,
-    @param:StringRes val title: Int,
-    @param:StringRes val artist: Int,
-    @param:StringRes val year: Int
-)
-
 @Composable
-fun ArtSpaceScreen(modifier: Modifier = Modifier) {
-    var artworkIndex by rememberSaveable { mutableIntStateOf(0) }
-    val artwork = when (artworkIndex) {
-        0 -> Artwork(
-            R.drawable.great_wave, R.string.great_wave_title, R.string.hokusai, R.string.great_wave_year
-        )
-        1 -> Artwork(
-            R.drawable.self_portrait, R.string.self_portrait_title, R.string.van_gogh, R.string.self_portrait_year
-        )
-        else -> Artwork(
-            R.drawable.wheat_field, R.string.wheat_field_title, R.string.van_gogh, R.string.wheat_field_year
-        )
-    }
-
-    val previous = { artworkIndex = (artworkIndex + ARTWORK_COUNT - 1) % ARTWORK_COUNT }
-    val next = { artworkIndex = (artworkIndex + 1) % ARTWORK_COUNT }
+private fun ArtSpaceScreen(
+    state: ArtSpaceUiState,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val artwork = state.artwork
     BoxWithConstraints(
         modifier = modifier.fillMaxSize().safeDrawingPadding().padding(20.dp)
     ) {
@@ -89,8 +70,8 @@ fun ArtSpaceScreen(modifier: Modifier = Modifier) {
                 ArtworkFrame(artwork, modifier = Modifier.weight(3f).fillMaxHeight())
                 ArtworkControls(
                     artwork = artwork,
-                    onPrevious = previous,
-                    onNext = next,
+                    onPrevious = onPrevious,
+                    onNext = onNext,
                     modifier = Modifier.weight(2f).verticalScroll(rememberScrollState())
                 )
             }
@@ -100,7 +81,7 @@ fun ArtSpaceScreen(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 ArtworkFrame(artwork, modifier = Modifier.weight(1f).fillMaxWidth())
-                ArtworkControls(artwork, previous, next, modifier = Modifier.fillMaxWidth())
+                ArtworkControls(artwork, onPrevious, onNext, modifier = Modifier.fillMaxWidth())
             }
         }
     }
@@ -174,7 +155,7 @@ private fun ArtworkControls(
 private fun ArtSpacePreview() {
     ArtSpaceAppTheme {
         Surface {
-            ArtSpaceScreen()
+            ArtSpaceScreen(artSpaceState(), onPrevious = {}, onNext = {})
         }
     }
 }
