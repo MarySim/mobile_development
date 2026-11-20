@@ -1,8 +1,0 @@
-<resources>
-    <string name="app_name">My Information</string>
-    <string name="full_name">Симонова Марина</string>
-    <string name="title_text">Студентка ФИТ-241 | Android Developer</string>
-    <string name="phone_text">+7 (999) 000-00-00</string>
-    <string name="social_text">@MarySim</string>
-    <string name="email_text">marina.simonova@example.com</string>
-</resources>
