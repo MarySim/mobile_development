@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ActivityLifecycle</string>
+    <string name="screen_title">Activity lifecycle</string>
+    <string name="logcat_instructions">Filter Logcat by ActivityLifecycle. Press Home, return to the app, and rotate the device.</string>
+</resources>
