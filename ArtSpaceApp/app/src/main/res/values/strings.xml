@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ArtSpaceApp</string>
+    <string name="previous_artwork">Previous</string>
+    <string name="next_artwork">Next</string>
+    <string name="artwork_credit">%1$s (%2$s)</string>
+    <string name="great_wave_title">The Great Wave off Kanagawa</string>
+    <string name="hokusai">Katsushika Hokusai</string>
+    <string name="great_wave_year">ca. 1830–32</string>
+    <string name="self_portrait_title">Self-Portrait with a Straw Hat</string>
+    <string name="van_gogh">Vincent van Gogh</string>
+    <string name="self_portrait_year">1887</string>
+    <string name="wheat_field_title">Wheat Field with Cypresses</string>
+    <string name="wheat_field_year">1889</string>
+</resources>
